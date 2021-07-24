@@ -19,8 +19,8 @@ app.use(morgan('combined'))
 app.use(express.json())
 
 // Routes
-app.use(planetsRouter)
-app.use(launchesRouter)
+app.use('/planets', planetsRouter)
+app.use('/launches', launchesRouter)
 
 // Core route
 // app.get('/*', ((req, res) => {
