@@ -11,7 +11,8 @@ const server = http.createServer(app);
 async function startServer() {
     await loadPlanetsData();
     server.listen(PORT, () => {
-        console.log(PORT)
+        console.log(`Port: ${PORT}`);
+        console.log(`URL: http://localhost:${PORT}`);
     });
 };
 
