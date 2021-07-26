@@ -1,4 +1,4 @@
-const { getAllLaunches, addNewLaunch, existLaunchWithId } = require('../../models/launches.model')
+const { getAllLaunches, addNewLaunch, existLaunchWithId, abortLaunchById } = require('../../models/launches.model')
 
 // Any function that working with http response or request
 // will start with 'http'
@@ -28,13 +28,16 @@ function httpAddNewLaunch(req, res) {
 }
 
 function httpAbortLaunch(req, res) {
-    const launchId = req.params.id
+    const launchId = Number(req.params.id)
 
     if (!existLaunchWithId(launchId)){
         return res.status(400).json({
             error: "Launch does not exist"
         })
-    }
+    };
+
+    const aborted = abortLaunchById(launchId);
+    return res.status(200).json(aborted)
 }
 
 module.exports = {
