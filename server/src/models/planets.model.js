@@ -5,6 +5,8 @@ const parse = require('csv-parse');
 const fileName = 'kepler_data.csv';
 const filePath = path.join(__dirname, '..', '..', 'data', fileName)
 
+const planets = require('./planets.mongo')
+
 const habitablePlanet = [];
 
 const isHabitablePlanet = (planet) => {
@@ -23,7 +25,10 @@ function loadPlanetsData() {
             }))
             .on('data', (data) => {
                 if (isHabitablePlanet(data)) {
-                    habitablePlanet.push(data);
+                    // TODO: Replace below create with insert + update = upsert
+                    // planets.create({
+                    //     keplerName: data.kepler_name
+                    // });
                 };
             })
             .on('error', (err) => {
@@ -37,8 +42,8 @@ function loadPlanetsData() {
     });
 };
 
-function getAllPlanets() {
-    return habitablePlanet
+async function getAllPlanets() {
+    return await planets.find({});
 }
 
 module.exports = {
