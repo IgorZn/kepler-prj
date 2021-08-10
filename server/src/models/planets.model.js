@@ -16,27 +16,25 @@ const isHabitablePlanet = (planet) => {
         && planet['koi_prad'] < 1.6;
     };
 
-function loadPlanetsData() {
+async function loadPlanetsData() {
     return new Promise( (resolve, reject) => {
         fs.createReadStream(filePath)
             .pipe(parse({
                 comment: '#',
                 columns: true
             }))
-            .on('data', (data) => {
+            .on('data', async (data) => {
                 if (isHabitablePlanet(data)) {
-                    // TODO: Replace below create with insert + update = upsert
-                    // planets.create({
-                    //     keplerName: data.kepler_name
-                    // });
+                    await savePlanets(data);
                 };
             })
             .on('error', (err) => {
                 console.log(err);
                 reject(err);
             })
-            .on('end', () => {
-                console.log(`${habitablePlanet.length} habitable planets found!`);
+            .on('end', async () => {
+                const countPlanetsFounds = (await getAllPlanets()).length;
+                console.log(`${countPlanetsFounds} habitable planets found!`);
                 resolve();
             })
     });
@@ -44,7 +42,22 @@ function loadPlanetsData() {
 
 async function getAllPlanets() {
     return await planets.find({});
-}
+};
+
+async function savePlanets(planet) {
+    try {
+        await planets.updateOne({
+            keplerName: planet.kepler_name,
+        }, {
+            keplerName: planet.kepler_name,
+        }, {
+            upsert: true,
+        });
+    } catch (e) {
+        console.error('Could not save planet: ' +  e);
+    }
+
+};
 
 module.exports = {
     loadPlanetsData,
