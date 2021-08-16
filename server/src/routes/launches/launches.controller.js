@@ -4,8 +4,8 @@ const { getAllLaunches, addNewLaunch, existLaunchWithId, abortLaunchById } = req
 // will start with 'http'
 // and return RESPONSE
 
-function httpGetAllLaunches(req, res) {
-    return res.status(200).json(getAllLaunches())
+async function httpGetAllLaunches(req, res) {
+    return res.status(200).json(await getAllLaunches())
 }
 
 function httpAddNewLaunch(req, res) {
